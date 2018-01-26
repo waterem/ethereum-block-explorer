@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  myapp_memcached:
+    image: memcached:latest
+    container_name: memcached
+  myapp_mysql:
+    image: mysql:latest
+    container_name: database
+    volumes:
+      - ./docker/:/etc/mysql/conf.d
+      - ./docker/:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_DATABASE=explorer
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=12dlql*41
+  myapp_node:
+    build: .
+    image: yzono-node:latest
+    container_name: explorer
+    working_dir: /app
+    tty: true
+    volumes:
+      - ./:/app
+    external_links:
+      - database
+      - memcached
