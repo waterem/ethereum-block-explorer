@@ -1,7 +1,11 @@
 FROM golang:latest
 
-RUN mkdir /app
-ADD . /app/
-WORKDIR /app
-RUN go build -o main .
-CMD ["/app/main"]
+RUN apt-get update
+RUN apt-get upgrade -y
+
+ENV GOBIN /go/bin
+
+RUN go get github.com/urfave/cli
+RUN go get github.com/go-sql-driver/mysql
+
+
