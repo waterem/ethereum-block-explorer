@@ -17,7 +17,7 @@ services:
       - MYSQL_PASSWORD=12dlql*41
   myapp_node:
     build: .
-    image: yzono-node:latest
+    image: explorer:latest
     container_name: explorer
     working_dir: /app
     tty: true

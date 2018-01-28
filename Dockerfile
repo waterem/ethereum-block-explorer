@@ -1,7 +1,7 @@
-FROM node:latest
+FROM golang:latest
 
-RUN npm install mysql
-RUN npm install jayson
-RUN npm install getopts
-RUN npm install log4js
-RUN npm install web3@0.20
+RUN mkdir /app
+ADD . /app/
+WORKDIR /app
+RUN go build -o main .
+CMD ["/app/main"]
