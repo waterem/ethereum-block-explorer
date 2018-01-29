@@ -7,5 +7,6 @@ ENV GOBIN /go/bin
 
 RUN go get github.com/urfave/cli
 RUN go get github.com/go-sql-driver/mysql
+RUN go get github.com/onrik/ethrpc
 
-
+RUN mkdir /go/src/explorer-cli

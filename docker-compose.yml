@@ -18,6 +18,6 @@ services:
     image: explorer-cli:latest
     container_name: explorer-cli
     volumes:
-      - ./src:/go/src
+      - ./src/explorer-cli:/go/src/explorer-cli
     external_links:
       - database

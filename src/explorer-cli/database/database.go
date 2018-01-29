@@ -1,27 +1,16 @@
-package main
+package database
 
 import (
 	"database/sql"
 	"fmt"
-	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/urfave/cli"
 )
 
-func main() {
-	app := cli.NewApp()
-	app.Name = "explorer-cli"
-	app.Usage = "get ethereum blockchain data and import into mysql database"
-	app.Action = func(c *cli.Context) error {
-		start()
-		return nil
-	}
-	app.Run(os.Args)
+func init() {
 }
 
-func start() {
-
+func Example() {
 	db, err := sql.Open("mysql", "admin:12dlql*41@(database:3306)/explorer")
 	if err != nil {
 		panic(err.Error())

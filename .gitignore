@@ -13,6 +13,3 @@
 
 # Visual Studio Code
 .vscode/
-
-# Go Package
-src/github.com
