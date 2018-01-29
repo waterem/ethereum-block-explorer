@@ -60,3 +60,5 @@ typings/
 .node-xml*
 
 package-lock.json
+
+.vscode/
