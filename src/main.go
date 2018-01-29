@@ -6,6 +6,7 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/urfave/cli"
 )
 
 func main() {
@@ -16,7 +17,6 @@ func main() {
 		start()
 		return nil
 	}
-
 	app.Run(os.Args)
 }
 
