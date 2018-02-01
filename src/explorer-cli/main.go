@@ -3,11 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/urfave/cli"
 
 	"./config"
+	"./ethrpc"
 	"./file"
+	"./functions"
 )
 
 func main() {
@@ -22,8 +25,20 @@ func main() {
 }
 
 func start() {
-	lastBlock := file.ReadLastBlock(config.Get("lastBlockFile"))
-	currentBlock := file.ReadLastBlock(config.Get("lastBlockFile"))
+	lastBlock, _ := strconv.Atoi(file.ReadLastBlock(config.Get("lastBlockFile")))
+	lastBlock++ // TODO
+
+	currentBlock := ethrpc.EthBlockNumber()
+
 	fmt.Println(lastBlock)
 	fmt.Println(currentBlock)
+
+	for lastBlock <= currentBlock {
+		functions.CreateBlock(lastBlock)
+
+		lastBlock++
+		fmt.Println(lastBlock)
+
+		break
+	}
 }

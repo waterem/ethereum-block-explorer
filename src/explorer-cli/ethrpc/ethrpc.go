@@ -2,7 +2,6 @@ package ethrpc
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/onrik/ethrpc"
 )
@@ -10,12 +9,24 @@ import (
 func init() {
 }
 
-func Example() {
+func EthBlockNumber() int {
 	client := ethrpc.NewEthRPC("")
 
-	version, err := client.EthBlockNumber()
+	blockNumber, err := client.EthBlockNumber()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	fmt.Println(version)
+
+	return blockNumber
+}
+
+func EthGetBlockByNumber(blockNumber int) {
+	client := ethrpc.NewEthRPC("")
+
+	block, err := client.EthGetBlockByNumber(blockNumber, false)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(block)
 }
