@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"strconv"
 
@@ -30,14 +30,14 @@ func start() {
 
 	currentBlock := ethrpc.EthBlockNumber()
 
-	fmt.Println(lastBlock)
-	fmt.Println(currentBlock)
+	log.Println(lastBlock)
+	log.Println(currentBlock)
 
 	for lastBlock <= currentBlock {
 		functions.CreateBlock(lastBlock)
 
 		lastBlock++
-		fmt.Println(lastBlock)
+		log.Println(lastBlock)
 
 		break
 	}
