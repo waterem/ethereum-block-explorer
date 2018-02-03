@@ -1,10 +1,11 @@
 DROP TABLE IF EXISTS blocks;
 CREATE TABLE blocks (
-    block_index     INTEGER UNSIGNED PRIMARY KEY,
-    timestamp       INTEGER UNSIGNED,
-    hash            INTEGER UNSIGNED,
-    parent_hash     INTEGER UNSIGNED
+    number              INTEGER UNSIGNED PRIMARY KEY,
+    hash_id             INTEGER UNSIGNED,
+    parent_hash_id      INTEGER UNSIGNED,
+    timestamp           INTEGER UNSIGNED
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE INDEX block_hash_id ON blocks (block_hash_id);
+CREATE INDEX hash_id ON blocks (hash_id);
+CREATE INDEX parent_hash_id ON blocks (parent_hash_id);
 

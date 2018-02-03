@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/joho/godotenv"
 	"github.com/urfave/cli"
 
 	"./config"
@@ -24,7 +25,18 @@ func main() {
 	app.Run(os.Args)
 }
 
+func loadEnv() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+}
+
 func start() {
+	loadEnv()
+
+	ethrpc.InitEthRPCClient(os.Getenv("ETHEREUM_RPC"))
+
 	lastBlock, _ := strconv.Atoi(file.ReadLastBlock(config.Get("lastBlockFile")))
 	lastBlock++ // TODO
 
@@ -39,6 +51,9 @@ func start() {
 		lastBlock++
 		log.Println(lastBlock)
 
-		break
+		// TODO
+		if lastBlock > 10 {
+			break
+		}
 	}
 }
