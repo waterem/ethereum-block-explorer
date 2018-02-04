@@ -38,12 +38,15 @@ func start() {
 	ethrpc.InitEthRPCClient(os.Getenv("ETHEREUM_RPC"))
 
 	lastBlock, _ := strconv.Atoi(file.ReadLastBlock(config.Get("lastBlockFile")))
-	lastBlock++ // TODO
+	lastBlock++
+
+	if lastBlock < 46147 {
+		lastBlock = 46147
+	}
 
 	currentBlock := ethrpc.EthBlockNumber()
 
-	log.Println(lastBlock)
-	log.Println(currentBlock)
+	log.Println("lastBlock=?, currentBlock=?", lastBlock, currentBlock)
 
 	for lastBlock <= currentBlock {
 		functions.CreateBlock(lastBlock)
@@ -52,7 +55,7 @@ func start() {
 		log.Println(lastBlock)
 
 		// TODO
-		if lastBlock > 10 {
+		if lastBlock > 46157 {
 			break
 		}
 	}
