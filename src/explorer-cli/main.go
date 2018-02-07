@@ -9,7 +9,7 @@ import (
 	"github.com/urfave/cli"
 
 	"./config"
-	"./ethrpc"
+	"./ethrepository"
 	"./file"
 	"./functions"
 )
@@ -35,27 +35,26 @@ func loadEnv() {
 func start() {
 	loadEnv()
 
-	ethrpc.InitEthRPCClient(os.Getenv("ETHEREUM_RPC"))
+	ethrepository.InitEthRPCClient(os.Getenv("ETHEREUM_RPC"))
 
 	lastBlock, _ := strconv.Atoi(file.ReadLastBlock(config.Get("lastBlockFile")))
 	lastBlock++
 
-	if lastBlock < 46147 {
-		lastBlock = 46147
+	if lastBlock < 1399243 {
+		lastBlock = 1399243
 	}
 
-	currentBlock := ethrpc.EthBlockNumber()
+	currentBlock := ethrepository.EthBlockNumber()
 
 	log.Println("lastBlock=?, currentBlock=?", lastBlock, currentBlock)
 
 	for lastBlock <= currentBlock {
+		log.Println(lastBlock)
 		functions.CreateBlock(lastBlock)
 
 		lastBlock++
-		log.Println(lastBlock)
 
-		// TODO
-		if lastBlock > 46157 {
+		if lastBlock > 1399242 {
 			break
 		}
 	}
