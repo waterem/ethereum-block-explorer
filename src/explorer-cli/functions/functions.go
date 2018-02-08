@@ -79,17 +79,17 @@ func CreateBlock(blockNumber int) {
 		// transfer
 		if strings.Contains(value.Input, "0xa9059cbb") {
 
-			method, address, balance := value.Input[0:len("0xa9059cbb")], value.Input[len("0xa9059cbb"):64], value.Input[len("0xa9059cbb")+64:]
+			method, address, balance := value.Input[0:len("0xa9059cbb")], value.Input[len("0xa9059cbb"):len("0xa9059cbb")+64], value.Input[len("0xa9059cbb")+64:]
+			fmt.Println(value.Input)
 			fmt.Println(method, address, balance)
-
-			//i, _ := strconv.ParseInt(balance, 16, 64)
-			//fmt.Println(i)
-
-			// get decimals from DB
+			fmt.Println(trimHexZero(address))
 
 			// decode input into address and value
 			// index_addresses
+
 			// transfer
+			// get decimals from DB
+			// get amount with decimals
 			// update balance
 		}
 	}
@@ -135,6 +135,29 @@ func hexToDecimal(h string) int64 {
 		panic(err)
 	}
 	return r
+}
+
+func padLeftEven(h string) string {
+	if len(h)%2 != 0 {
+		return "0" + h
+	}
+	return h
+}
+
+func sanitizeHex(h string) string {
+	var hex string
+	if strings.Contains(h, "0x") {
+		hex = string(h[2:])
+	} else {
+		hex = h
+	}
+	return "0x" + padLeftEven(hex)
+}
+
+func trimHexZero(h string) string {
+	d := strings.TrimLeft(h, "0")
+	hex := sanitizeHex(d)
+	return hex
 }
 
 func createIndexBlock(blockHash string) int64 {
