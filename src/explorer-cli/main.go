@@ -40,8 +40,9 @@ func start() {
 	lastBlock, _ := strconv.Atoi(file.ReadLastBlock(config.Get("lastBlockFile")))
 	lastBlock++
 
-	if lastBlock < 1399243 {
-		lastBlock = 1399243
+	// 1397553
+	if lastBlock < 1397553 {
+		lastBlock = 1397553
 	}
 
 	currentBlock := ethrepository.EthBlockNumber()
@@ -54,7 +55,8 @@ func start() {
 
 		lastBlock++
 
-		if lastBlock > 1399242 {
+		// 1500000
+		if lastBlock > 1500000 {
 			break
 		}
 	}

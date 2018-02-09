@@ -15,6 +15,15 @@ import (
 
 var db, err = sql.Open("mysql", "admin:12dlql*41@(database:3306)/explorer")
 
+type Token struct {
+	id         int
+	name       string
+	symbol     string
+	totalSuply int
+	decimals   int
+	addressId  int
+}
+
 func init() {
 	if err != nil {
 		panic(err.Error())
@@ -50,12 +59,12 @@ func CreateBlock(blockNumber int) {
 		}
 
 		// create token
-		if strings.Contains(value.Input, "0x18160ddd") &&
-			strings.Contains(value.Input, "0x70a08231") &&
-			strings.Contains(value.Input, "0xdd62ed3e") &&
-			strings.Contains(value.Input, "0xa9059cbb") &&
-			strings.Contains(value.Input, "0x095ea7b3") &&
-			strings.Contains(value.Input, "0x23b872dd") {
+		if strings.Contains(value.Input, "18160ddd") &&
+			strings.Contains(value.Input, "70a08231") &&
+			strings.Contains(value.Input, "dd62ed3e") &&
+			strings.Contains(value.Input, "a9059cbb") &&
+			strings.Contains(value.Input, "095ea7b3") &&
+			strings.Contains(value.Input, "23b872dd") {
 
 			transactionReceipt := ethrepository.EthGetTransactionReceipt(value.Hash)
 
@@ -78,14 +87,15 @@ func CreateBlock(blockNumber int) {
 
 		// transfer
 		if strings.Contains(value.Input, "0xa9059cbb") {
+			// value.Input.To is valid or check. ignore if it is invalid.
 
-			method, address, balance := value.Input[0:len("0xa9059cbb")], value.Input[len("0xa9059cbb"):len("0xa9059cbb")+64], value.Input[len("0xa9059cbb")+64:]
-			fmt.Println(value.Input)
-			fmt.Println(method, address, balance)
-			fmt.Println(trimHexZero(address))
-
-			// decode input into address and value
-			// index_addresses
+			_, address, _ := value.Input[0:len("0xa9059cbb")], value.Input[len("0xa9059cbb"):len("0xa9059cbb")+64], value.Input[len("0xa9059cbb")+64:]
+			addressHex := trimHexZero(address)
+			createIndexAddress(addressHex)
+			token := getTokenByContractAddress(value.To)
+			if token != nil {
+				fmt.Println(token.decimals)
+			}
 
 			// transfer
 			// get decimals from DB
@@ -93,6 +103,44 @@ func CreateBlock(blockNumber int) {
 			// update balance
 		}
 	}
+}
+
+func getTokenByContractAddress(address string) *Token {
+
+	fmt.Println(address)
+	rows, err := db.Query("SELECT id FROM index_addresses WHERE address=? LIMIT 1", address)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	var addressId int64
+	for rows.Next() {
+		var id int64
+		err := rows.Scan(&id)
+		if err != nil {
+			panic(err.Error())
+		}
+		rows.Close()
+		addressId = id
+	}
+
+	if addressId == 0 {
+		return nil
+	}
+
+	rows, err = db.Query("SELECT * FROM tokens WHERE address_id=?", addressId)
+	defer rows.Close()
+	if err != nil {
+		panic(err.Error())
+	}
+	for rows.Next() {
+		token := new(Token)
+		if err := rows.Scan(&token.id, &token.name, &token.symbol, &token.totalSuply, &token.decimals, &token.addressId); err != nil {
+			panic(err.Error())
+		}
+		return token
+	}
+	panic(nil)
 }
 
 func createToken(name string, symbol string, totalSuply string, decimals string, address string) {
